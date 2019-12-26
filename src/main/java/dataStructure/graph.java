@@ -15,7 +15,7 @@ public interface graph {
      */
     public node_data getNode(int key);
     /**
-     * return the data of the edge (src,dest), null if none.
+     * return the NodeData of the edge (src,dest), null if none.
      * Note: this method should run in O(1) time.
      * @param src
      * @param dest
@@ -55,7 +55,7 @@ public interface graph {
      * Delete the node (with the given ID) from the graph -
      * and removes all edges which starts or ends at this node.
      * This method should run in O(n), |V|=n, as all the edges should be removed.
-     * @return the data of the removed node (null if none).
+     * @return the NodeData of the removed node (null if none).
      * @param key
      */
     public node_data removeNode(int key);
@@ -64,7 +64,7 @@ public interface graph {
      * Note: this method should run in O(1) time.
      * @param src
      * @param dest
-     * @return the data of the removed edge (null if none).
+     * @return the NodeData of the removed edge (null if none).
      */
     public edge_data removeEdge(int src, int dest);
     /** return the number of vertices (nodes) in the graph.

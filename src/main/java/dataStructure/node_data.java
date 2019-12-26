@@ -35,17 +35,17 @@ public interface node_data {
      */
     public void setWeight(double w);
     /**
-     * return the remark (meta data) associated with this node.
+     * return the remark (meta NodeData) associated with this node.
      * @return
      */
     public String getInfo();
     /**
-     * Allows changing the remark (meta data) associated with this node.
+     * Allows changing the remark (meta NodeData) associated with this node.
      * @param s
      */
     public void setInfo(String s);
     /**
-     * Temporal data (aka color: e,g, white, gray, black)
+     * Temporal NodeData (aka color: e,g, white, gray, black)
      * which can be used be algorithms
      * @return
      */

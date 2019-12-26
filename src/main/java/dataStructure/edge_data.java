@@ -21,17 +21,17 @@ public interface edge_data {
      */
     public double getWeight();
     /**
-     * return the remark (meta data) associated with this edge.
+     * return the remark (meta NodeData) associated with this edge.
      * @return
      */
     public String getInfo();
     /**
-     * Allows changing the remark (meta data) associated with this edge.
+     * Allows changing the remark (meta NodeData) associated with this edge.
      * @param s
      */
     public void setInfo(String s);
     /**
-     * Temporal data (aka color: e,g, white, gray, black)
+     * Temporal NodeData (aka color: e,g, white, gray, black)
      * which can be used be algorithms
      * @return
      */

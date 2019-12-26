@@ -212,7 +212,7 @@
 // *  This <a href = "http://johndyer.name/lab/colorpicker/">color picker</a>
 // *  is a convenient way to find a desired color.
 // *  The second method allows you to specify colors using the
-// *  {@link Color} data type that is discussed in Chapter 3. Until then,
+// *  {@link Color} NodeData type that is discussed in Chapter 3. Until then,
 // *  you can use this method with one of these predefined colors in standard drawing:
 // *  {@link #BLACK}, {@link #BLUE}, {@link #CYAN}, {@link #DARK_GRAY}, {@link #GRAY},
 // *  {@link #GREEN}, {@link #LIGHT_GRAY}, {@link #MAGENTA}, {@link #ORANGE},
@@ -278,7 +278,7 @@
 // *  <li> {@link #setFont(Font font)}
 // *  </ul>
 // *  <p>
-// *  You use the {@link Font} data type to specify the font. This allows you to
+// *  You use the {@link Font} NodeData type to specify the font. This allows you to
 // *  choose the face, size, and style of the font. For example, the following
 // *  code fragment sets the font to Arial Bold, 60 point.
 // *  <pre>
@@ -442,7 +442,7 @@
 // *  </ul>
 // *  <p>
 // *  <b>Performance tricks.</b>
-// *  Standard drawing is capable of drawing large amounts of data.
+// *  Standard drawing is capable of drawing large amounts of NodeData.
 // *  Here are a few tricks and tips:
 // *  <ul>
 // *  <li> Use <em>double buffering</em> for static drawing with a large
