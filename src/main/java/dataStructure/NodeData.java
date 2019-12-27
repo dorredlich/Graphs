@@ -2,12 +2,15 @@ package dataStructure;
 
 import utils.Point3D;
 
-public class NodeData implements node_data {
+import java.io.Serializable;
+
+public class NodeData implements node_data, Serializable {
     private int k;
     private double weight;
     private String Information;
     private int Tag;
     private Point3D location;
+    private boolean visited;
 
 
     public NodeData(){
@@ -16,6 +19,7 @@ public class NodeData implements node_data {
         this.Information = null;
         this.location = null;
         this.Tag = 0;
+        this.setVisited(false);
     }
 
     public NodeData(int k, double weight, int Tag, Point3D point, String Information){
@@ -24,6 +28,7 @@ public class NodeData implements node_data {
         this.location = new Point3D(point);
         this.Information = Information;
         this.weight = weight;
+        this.setVisited(false);
     }
 
     public NodeData(NodeData n){
@@ -32,6 +37,11 @@ public class NodeData implements node_data {
         this.location = new Point3D(n.location);
         this.Information = n.Information;
         this.weight = n.weight;
+    }
+
+    public NodeData(Point3D point){
+        this.location = point;
+        this.Information = "";
     }
 
 
@@ -77,5 +87,17 @@ public class NodeData implements node_data {
     @Override
     public void setTag(int t){
         this.Tag = t;
+    }
+
+    public boolean isVisited() {
+        return visited;
+    }
+
+    public void setVisited(boolean visited) {
+        this.visited = visited;
+    }
+
+    public String toString(){
+        return "" + this.getKey();
     }
 }
