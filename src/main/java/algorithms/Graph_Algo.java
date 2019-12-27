@@ -15,7 +15,7 @@ import dataStructure.*;
  * @author
  *
  */
-public class Graph_Algo implements graph_algorithms{
+public class Graph_Algo implements graph_algorithms {
     private graph GraphAlgo;
 
     @Override
