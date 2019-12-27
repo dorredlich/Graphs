@@ -7,21 +7,29 @@ import java.util.ArrayList;
 
 public class HeapMin {
 
-    private ArrayList<node_data> sortedQ;
+    private ArrayList<node_data> array;
+
+    public ArrayList<node_data> getArray(){
+        return array;
+    }
+
+    public HeapMin(){
+        this.array = new ArrayList<node_data>();
+    }
 
     // Constructor
     public HeapMin(ArrayList<node_data> ar) {
-        this.sortedQ = ar;
+        this.array = ar;
         build();
     }
 
     public void insert(node_data item) {
 
-        sortedQ.add(item);
-        int i = sortedQ.size() - 1;
+        array.add(item);
+        int i = array.size() - 1;
         int parent = parent(i);
 
-        while (parent != i && sortedQ.get(i).getWeight() < sortedQ.get(parent).getWeight()) {
+        while (parent != i && array.get(i).getWeight() < array.get(parent).getWeight()) {
 
             swap(i, parent);
             i = parent;
@@ -30,50 +38,53 @@ public class HeapMin {
     }
 
     // Build Min Heap
-    private void build() {
+    public void build() {
 
-        for (int i = (sortedQ.size() / 2) - 1; i >= 0; i--) {
-            minHeapify(sortedQ,i);
+        for (int i = (array.size() / 2) - 1; i >= 0; i--) {
+            minHeapify(i);
         }
     }
 
     // Min Heapify
     // Additional conditions to keep track of heap_index
-    private void minHeapify(ArrayList<node_data> unsortedQ, int i) {
+    private void minHeapify(int i) {
         int l = left(i);
         int r = right(i);
         int smallest = -1;
-        if (l <= unsortedQ.size()-1) {
-            if (getDist(unsortedQ.get(l)) < getDist(unsortedQ.get(i))) {
+        if (l <= array.size()-1) {
+            if (getDist(array.get(l)) < getDist(array.get(i))) {
                 smallest = l;
             } else {
                 smallest = i;
             }
         }
-        if (r <= unsortedQ.size()-1) {
-            if (getDist(unsortedQ.get(r)) < getDist(unsortedQ.get(smallest))) {
+        if (r <= array.size()-1) {
+            if (getDist(array.get(r)) < getDist(array.get(smallest))) {
                 smallest = r;
             }
         }
         if (smallest != i) {
             swap(i,smallest);
-            minHeapify(unsortedQ, smallest);
+            minHeapify(smallest);
         }
     }
 
-    // ExtractMin
-    // Removing last element in ArrayList
+
+    /**
+    * Removing min node of the array and using minheapify to find the place of the node
+     */
     public node_data extractMin() {
-        if (sortedQ.size() < 1) {
+        if (array.size() == 0) {
             throw new IllegalStateException("Min-Heap undeflow!");
         }
-        node_data min = sortedQ.get(0);
-        sortedQ.set(0, sortedQ.get(sortedQ.size()-1));
-        sortedQ.remove(sortedQ.size()-1);
-        sortedQ.size();
-        if (sortedQ.size() > 0) {
-            minHeapify(sortedQ,0);
+        if(array.size() == 1){
+            node_data min = array.get(0);
         }
+        //setting the last node to be the root
+        node_data min = array.get(0);
+        node_data last = array.remove(array.size() - 1);
+        array.set(0, last);
+        minHeapify(0);
 
         return min;
     }
@@ -113,7 +124,7 @@ public class HeapMin {
 
     // Check the heap is empty
     public boolean isEmpty() {
-        return sortedQ.isEmpty();
+        return array.isEmpty();
     }
 
 
@@ -123,11 +134,11 @@ public class HeapMin {
         return v.getWeight();
     }
 
+    //swap between nodes
     private void swap(int i, int parent) {
-
-        node_data temp = sortedQ.get(parent);
-        sortedQ.set(parent, sortedQ.get(i));
-        sortedQ.set(i, temp);
+        node_data temp = array.get(parent);
+        array.set(parent, array.get(i));
+        array.set(i, temp);
     }
 
 }
