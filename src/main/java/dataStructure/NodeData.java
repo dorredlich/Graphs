@@ -11,9 +11,11 @@ public class NodeData implements node_data, Serializable {
     private int Tag;
     private Point3D location;
     private boolean visited;
+    static private int KCount = 1;
 
 
     public NodeData(){
+        this.k = KCount++;
         this.k = 0;
         this.weight = 0;
         this.Information = null;
@@ -23,6 +25,7 @@ public class NodeData implements node_data, Serializable {
     }
 
     public NodeData(int k, double weight, int Tag, Point3D point, String Information){
+        this.k = KCount++;
         this.k = k;
         this.Tag = Tag;
         this.location = new Point3D(point);
@@ -40,6 +43,7 @@ public class NodeData implements node_data, Serializable {
     }
 
     public NodeData(Point3D point){
+        this.k = KCount++;
         this.location = point;
         this.Information = "";
     }

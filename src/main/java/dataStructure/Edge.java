@@ -20,7 +20,7 @@ public class Edge implements edge_data {
     public Edge(int src, int dest, double weight, String Information,int Tag){
         this.src = src;
         this.dest = dest;
-        this.Information = "";
+        this.Information = Information;
         this.Tag = Tag;
         this.weight = weight;
     }

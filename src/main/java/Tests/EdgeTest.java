@@ -1,4 +1,4 @@
-package Testing;
+package Tests;
 
 import dataStructure.Edge;
 import dataStructure.edge_data;
