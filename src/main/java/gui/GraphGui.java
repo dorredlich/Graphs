@@ -1,4 +1,4 @@
-package GUI;
+package gui;
 
 import StdDraw.StdDraw;
 import algorithms.Graph_Algo;

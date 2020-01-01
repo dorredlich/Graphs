@@ -23,9 +23,9 @@ public class HeapMin {
         build();
     }
 
-    public void insert(node_data item) {
+    public void insert(node_data node) {
 
-        array.add(item);
+        array.add(node);
         int i = array.size() - 1;
         int parent = parent(i);
 

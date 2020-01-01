@@ -1,15 +1,12 @@
-package Testing;
+package Tests;
 
 import dataStructure.DGraph;
 import dataStructure.Edge;
-import dataStructure.NodeData;
 import dataStructure.NodeData;
 import dataStructure.edge_data;
 import org.junit.Before;
 import org.junit.Test;
 import utils.Point3D;
-
-import java.awt.*;
 
 import static org.junit.Assert.*;
 
