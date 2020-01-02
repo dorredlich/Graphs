@@ -1,9 +1,6 @@
 package Tests;
 
-import dataStructure.DGraph;
-import dataStructure.Edge;
-import dataStructure.NodeData;
-import dataStructure.edge_data;
+import dataStructure.*;
 import org.junit.Before;
 import org.junit.Test;
 import utils.Point3D;
@@ -68,6 +65,94 @@ public class DGraphTest {
             assertEquals(Graph.getEdge(ans[i].getSrc(), ans[i].getDest()).toString(), ans[i].toString());
             System.out.println(Graph.getEdge(ans[i].getSrc(), ans[i].getDest()).toString() + "," + ans[i].toString());
         }
+    }
+    @Test
+    public void addNode() {
+        DGraph d = new DGraph();
+        node_data nd = new NodeData(new Point3D(5,5,8));
+        node_data nd2 = new NodeData(new Point3D(10,2,3));
+        d.addNode(nd);
+        d.addNode(nd2);
+        assertEquals(d.getNode(7), nd);
+        assertEquals(d.getNode(8), nd2);
+    }
 
+    @Test
+    public void connect() {
+        DGraph d = new DGraph();
+        node_data nd = new NodeData(new Point3D(7,8,3));
+        node_data nd2 = new NodeData(new Point3D(1,5,3));
+        d.addNode(nd);
+        d.addNode(nd2);
+        d.connect(nd.getKey(),nd2.getKey(),1);
+        d.getEdge(nd.getKey(),nd2.getKey());
+        boolean flag1 = d.getE(nd.getKey()).contains(d.getEdge(nd.getKey(),nd2.getKey()));
+        assertEquals(flag1,true);
+    }
+
+    @Test
+    public void removeNode() {
+        DGraph d = new DGraph();
+        node_data nd = new NodeData(new Point3D(6,9,0));
+        node_data nd2 = new NodeData(new Point3D(20,10,3));
+        node_data nd3 = new NodeData(new Point3D(3,3,3));
+        d.addNode(nd);
+        d.addNode(nd2);
+        d.addNode(nd3);
+        d.removeNode(1);
+        d.removeNode(2);
+        d.removeNode(3);
+        assertEquals(null,d.getNode(1));
+        assertEquals(null,d.getNode(2));
+        assertEquals(null,d.getNode(3));
+    }
+
+    @Test
+    public void getMC() {
+        DGraph d = new DGraph();
+        node_data nd = new NodeData(new Point3D(1,2,3));
+        node_data nd2 = new NodeData(new Point3D(1,2,3));
+        d.addNode(nd);
+        d.addNode(nd2);
+        d.connect(nd.getKey(),nd2.getKey(),10);
+        d.removeEdge(nd.getKey(),nd2.getKey());
+        assertEquals(4 , d.getMC());
+    }
+
+    @Test
+    public void removeEdge() {
+        DGraph p = new DGraph();
+        node_data a1 = new NodeData(new Point3D(1,5,3));
+        node_data a2 = new NodeData(new Point3D(1,2,8));
+        p.addNode(a1);
+        p.addNode(a2);
+        p.connect(a1.getKey(),a2.getKey(), 1);
+        p.removeEdge(a1.getKey(),a2.getKey());
+        assertEquals(p.getEdge(a1.getKey(),a2.getKey()),null);
+    }
+
+    @Test
+    public void nodeSize() {
+        DGraph p = new DGraph();
+        node_data a1 = new NodeData(new Point3D(3,2,3));
+        node_data a2 = new NodeData(new Point3D(1,4,8));
+        p.addNode(a1);
+        p.addNode(a2);
+        assertEquals(2,p.nodeSize());
+        p.removeNode(a1.getKey());
+        assertEquals(1,p.nodeSize());
+    }
+
+    @Test
+    public void edgeSize() {
+        DGraph p = new DGraph();
+        node_data a1 = new NodeData(new Point3D(1,2,0));
+        node_data a2 = new NodeData(new Point3D(1,2,0));
+        p.addNode(a1);
+        p.addNode(a2);
+        p.connect(a1.getKey(),a2.getKey(),10);
+        assertEquals(p.edgeSize(),1);
+        p.removeEdge(a1.getKey(),a2.getKey());
+        assertEquals(p.edgeSize(),0);
     }
 }

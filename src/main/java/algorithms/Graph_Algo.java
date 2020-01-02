@@ -1,10 +1,7 @@
 package algorithms;
 
 import java.io.*;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import com.sun.corba.se.impl.orbutil.graph.Graph;
 import dataStructure.*;
@@ -15,7 +12,7 @@ import dataStructure.*;
  * @author
  *
  */
-public class Graph_Algo implements graph_algorithms {
+public class Graph_Algo implements graph_algorithms,Serializable {
     private graph GraphAlgo;
 
     @Override
@@ -65,67 +62,73 @@ public class Graph_Algo implements graph_algorithms {
 
     }
 
-    private void  tagZero(graph g){
-        Collection<node_data> node = g.getV();
-        for(node_data n: node)
-            n.setTag(0);
+    /**
+     * function to set the tags.
+     * @return
+     */
+    private boolean checkTag() {
+        for(node_data node :  GraphAlgo.getV()) {
+            if(node.getTag() == -1)
+                return false;
+            else
+                node.setTag(-1);
+        }
+        return true;
     }
 
     @Override
     public boolean isConnected() {
-        graph original = this.copy();
-        graph trans = TranspostEdge(new DGraph(),original);
-        int count = 0;
-        int count2 = 0;
-        for(node_data node: original.getV()) {
-            if (original.getE(node.getKey()) != null) {
-                Collection<edge_data> c2 = original.getE(node.getKey());
-                for (edge_data e : c2) {
-                    NodeData node2 = (NodeData) original.getNode(e.getDest());
-                    if (!node2.isVisited()) {
-                        node2.setVisited(true);
-                        count++;
-                    }
-                }
-            }
+        for (node_data node : GraphAlgo.getV()) {
+            node.setTag(-1);
         }
-        for(node_data node: trans.getV()) {
-            if (trans.getE(node.getKey()) != null) {
-                Collection<edge_data> c2 = trans.getE(node.getKey());
-                for (edge_data e : c2) {
-                    NodeData node2 = (NodeData) trans.getNode(e.getDest());
-                    if (!node2.isVisited()) {
-                        node2.setVisited(true);
-                        count2++;
-                    }
-                }
-            }
+        for (node_data node : GraphAlgo.getV()) {
+            node.setTag(1);
+            ifConRecursive(GraphAlgo.getE(node.getKey()));
+            if(!checkTag())
+                return false;
         }
-        if(count == count2) return true;
-        return false;
-
+        return true;
     }
 
-//    private boolean markVisited(node_data node, graph g , node_data start) {
-//        if (g.getE(node.getKey()) != null) {
-//            for (edge_data e : g.getE(node.getKey())) {
-//                if (g.getNode(e.getDest()).getTag() != 1) {
-//                    node.setTag(1);
-//                    g.getNode(e.getDest()).setTag(1);
-//                    markVisited(g.getNode(e.getDest()), g , start);
+    /**
+     *  recursive help function for isConnected method
+     * */
+    private void ifConRecursive(Collection<edge_data> edge) {
+        for(edge_data ed : edge) {
+            if(GraphAlgo.getNode(ed.getDest()).getTag() == -1 ) {
+                GraphAlgo.getNode(ed.getDest()).setTag(1);
+                ifConRecursive(GraphAlgo.getE(ed.getDest()));
+            }
+        }
+        return;
+    }
+
+//    private boolean markVisited(node_data start,Collection<edge_data> cg) {
+//        if(cg.size() != 0 ) {
+//            start.setTag(5);
+//        }
+//        if(cg.size() == 0) {
+//            return false;
+//        }
+//        else {
+//            boolean ans = true;
+//            for (edge_data e : cg) {
+//                if (e.getTag() != 5) {
+//                    e.setTag(5);
+//                    node_data dest = this.GraphAlgo.getNode(e.getDest());
+//                    Collection<edge_data> c = this.GraphAlgo.getE(e.getDest());
+//                    ans = markVisited(dest, c);
 //                }
 //            }
-//        }
-//        if(node.getKey() == start.getKey()) {
-//            for (node_data v : g.getV()) {
-//                if (v.getTag() == 0) {
-//                    return false;
-//                }
+//            if (ans == true) {
+//                return true;
+//            }
+//            else {
+//                return false;
 //            }
 //        }
-//
-//        return true;
 //    }
+
 
     private graph TranspostEdge(graph trans, graph g) {
         for (node_data n : g.getV()) {
@@ -191,8 +194,37 @@ public class Graph_Algo implements graph_algorithms {
 
     @Override
     public List<node_data> TSP(List<Integer> targets) {
+        List<node_data> list = new ArrayList<node_data>();
+        for (int i = 0; i < targets.size(); i++) {
+            if(this.GraphAlgo.getNode(targets.get(i)) == null) {
+                return list;
+            }
+        }
+        if(targets.size() == 1) {
 
-        return null;
+            node_data one = this.GraphAlgo.getNode(targets.get(0));
+            list.add(one);
+            return list;
+        }
+        else {
+            list = new ArrayList<>();
+            List<node_data> listTemp = new ArrayList<>();
+            int i = 0;
+            while(i+1<targets.size()) {
+                listTemp = shortestPath(targets.get(i), targets.get(i+1));
+                for (int k = listTemp.size()-1 ; k >= 0  ; k--) {
+
+                    if(list.contains(listTemp.get(k)) && k == listTemp.size()-1) {
+                        ;
+                    }
+                    else {
+                        list.add(listTemp.get(k));
+                    }
+                }
+                i++;
+            }
+            return list;
+        }
     }
 
     @Override

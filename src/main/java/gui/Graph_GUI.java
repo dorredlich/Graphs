@@ -13,18 +13,18 @@ import java.awt.*;
 import java.util.List;
 import java.util.*;
 
-public class GraphGui {
+public class Graph_GUI {
     public static DGraph graph = new DGraph();
     public static Graph_Algo GA = new Graph_Algo();
 
 
-    public GraphGui() {
+    public Graph_GUI() {
         graph = new DGraph();
         GA = new Graph_Algo();
         this.openCanvas();
     }
 
-    public GraphGui(DGraph graph) {
+    public Graph_GUI(DGraph graph) {
         this.graph = graph;
         this.printGraph();
     }
