@@ -22,45 +22,53 @@ public class DGraph implements graph {
 
     @Override
     public node_data getNode(int key) {
-
-        return this.MapNode.get(key);
+        if (MapNode.containsKey(key))
+            return this.MapNode.get(key);
+        return null;
     }
 
     @Override
     public edge_data getEdge(int src, int dest) {
         try {
-            return (edge_data) this.MapEdge.get(src).get(dest);
-        } catch (NullPointerException ex) {
+            return this.MapEdge.get(src).get(dest); // if edge not exist should throw NullPointerException
+        } catch (NullPointerException e) {
             return null;
         }
     }
 
     @Override
     public void addNode(node_data n) {
-        this.MapNode.put(n.getKey(), n);
-        this.nodeSize++;
-        this.MC++;
+        if (!MapNode.containsKey(n)) {
+            this.MapNode.put(n.getKey(), n);
+            this.nodeSize++;
+            this.MC++;
+        }
+        else {
+            System.out.println("Node already exist");
+        }
     }
 
     @Override
     public void connect(int src, int dest, double w) {
-        edge_data n = new Edge(src, dest, w);
-        HashMap<Integer, edge_data> add = new HashMap<>();
-        if (this.getNode(src) != null && this.getNode(dest) == null)//if their is a src and not a dest but still wand to
-            this.MapEdge.put(src, add); // connect edge to src
-        if (this.getNode(src) != null && this.getNode(dest) != null) {
-            try {
-                if (this.getEdge(src, dest) == null) {
-                    if (this.MapEdge.get(src) != null)
-                        this.MapEdge.get(src).put(dest, n);
-                    if (this.MapEdge.get(src) == null) {
-                        this.MapEdge.put(src, add);
-                        this.MapEdge.get(src).put(dest, n);
-                    }
+        edge_data ed = new Edge(src,dest,w);
+        if(this.getNode(src)!=null && this.getNode(dest)!=null) {  // the nodes isnt exist.
+            if (this.getEdge(src, dest) == null) {  // the edge isnt exist.
+                if(this.MapEdge.get(src) == null) {   // the Hashmap of neighburs isnt exist
+                    HashMap<Integer, edge_data> hMe = new HashMap<>();
+                    this.MapEdge.put(src,hMe);
+                    this.MapEdge.get(src).put(dest,ed);
                 }
-            } catch (Exception e) {
-                System.out.println("Error with connect");
+                else {         //hash map of neighburs exist but the edge isnt.
+                    this.MapEdge.get(src).put(dest, ed);
+                }
             }
+            else{
+                this.removeEdge(src,dest);
+                this.connect(src,dest,w);
+            }
+        }
+        else {
+            throw new RuntimeException("Wrong input, Missing node.");
         }
         this.edgeSize++;
         this.MC++;
@@ -73,7 +81,10 @@ public class DGraph implements graph {
 
     @Override
     public Collection<edge_data> getE(int node_id) {
-        return this.MapEdge.get(node_id).values();
+        if (this.MapEdge.get(node_id) != null) { // if there is edges to this node
+            return this.MapEdge.get(node_id).values();
+        }
+        return null;
     }
 
     @Override
@@ -127,16 +138,4 @@ public class DGraph implements graph {
 
         return this.MC;
     }
-
-
-    public HashMap getHash() {
-        return this.MapNode;
-    }
-
-    public HashMap getEdgeHash() {
-        return this.MapEdge;
-    }
-
-
-
 }

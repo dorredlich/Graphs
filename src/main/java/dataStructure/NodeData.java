@@ -69,6 +69,7 @@ public class NodeData implements node_data, Serializable {
         return this.weight;
     }
 
+    @Override
     public void setWeight(double w){
         this.weight = w;
     }

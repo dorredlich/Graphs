@@ -2,134 +2,281 @@ package gui;
 
 import StdDraw.StdDraw;
 import algorithms.Graph_Algo;
-import dataStructure.DGraph;
-import dataStructure.NodeData;
-import dataStructure.edge_data;
-import dataStructure.node_data;
+import dataStructure.*;
 import utils.Point3D;
 
 
+import javax.swing.*;
+import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.List;
 import java.util.*;
 
-public class Graph_GUI {
-    public static DGraph graph = new DGraph();
-    public static Graph_Algo GA = new Graph_Algo();
+public class Graph_GUI extends JFrame implements ActionListener {
 
+    private graph g;
+    private static final long serialVersionUID = 6128157318970002904L;
+    LinkedList<Point3D> points = new LinkedList<Point3D>();
 
-    public Graph_GUI() {
-        graph = new DGraph();
-        GA = new Graph_Algo();
-        this.openCanvas();
+    public void Gui_Graph() {
+        this.g = null;
+        initGUI();
     }
 
-    public Graph_GUI(DGraph graph) {
-        this.graph = graph;
-        this.printGraph();
+    public void Gui_Graph(graph g2) {
+        this.g = g2;
+        initGUI();
     }
 
-    public boolean isConnected() {
-        GA.init(graph);
-        return GA.isConnected();
+    private void initGUI() {
+        this.setSize(1000, 10000);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setVisible(true);
+        // menu up
+        MenuBar menuBar = new MenuBar();
+        Menu menu = new Menu("Menu");
+        menuBar.add(menu);
+        Menu graph_paint = new Menu("Graph commands");
+        menuBar.add(graph_paint);
+        this.setMenuBar(menuBar);
+
+        MenuItem save = new MenuItem("Save graph");
+        save.addActionListener(this);
+
+        MenuItem load = new MenuItem("Load graph");
+        load.addActionListener(this);
+
+        menu.add(save);
+        menu.add(load);
+
+        // graph up
+        MenuItem Drawgraph = new MenuItem("Draw graph");
+        Drawgraph.addActionListener(this);
+        MenuItem isConnected = new MenuItem("is Connected");
+        isConnected.addActionListener(this);
+        MenuItem shortestPathDist = new MenuItem("shortest Path Dist");
+        shortestPathDist.addActionListener(this);
+        MenuItem shortestPath = new MenuItem("shortest Path");
+        shortestPath.addActionListener(this);
+        MenuItem TSP = new MenuItem("TSP");
+        TSP.addActionListener(this);
+        graph_paint.add(Drawgraph);
+        graph_paint.add(isConnected);
+        graph_paint.add(shortestPathDist);
+        graph_paint.add(shortestPath);
+        graph_paint.add(TSP);
     }
 
-    public void add_node(double x, double y) {
-        Point3D p = new Point3D(x, y);
-        NodeData n = new NodeData(p);
-        graph.addNode(n);
-    }
-
-    public void add_edge(int src, int dest, double weight) {
-        graph.connect(src, dest, weight);
-    }
-
-    public void remove_edge(int src, int dest) {
-        graph.removeEdge(src, dest);
-
-    }
-
-    public void remove_node(int key) {
-
-        graph.removeNode(key);
-    }
-
-    public void save(String file_name) {
-        GA.init(graph);
-        GA.save(file_name);
-    }
-
-    public void load(String file_name) {
-        GA.init(file_name);
-        graph = (DGraph) GA.copy();
-
-    }
-
-    public double ShortestPath(int src, int dest) {
-        GA.init(graph);
-        return GA.shortestPathDist(src, dest);
-    }
-
-    public List<node_data> ShortestPathList(int src, int dest) {
-        GA.init(graph);
-        return GA.shortestPath(src, dest);
-    }
-
-    public void Clean() {
-        graph = new DGraph();
-        GA.init(graph);
-        this.printGraph();
-    }
+    /**
+     * this function will paint the graph
+     */
+    public void paint(Graphics g) {
+        super.paint(g);
 
 
-    public void openCanvas() {
-        StdDraw.setCanvasSize(1000, 1000);
-        StdDraw.setXscale(-100, 100);
-        StdDraw.setYscale(-100, 100);
-        printGraph();
-    }
-
-    public void printGraph() {
-        StdDraw.clear();
-        StdDraw.setPenColor(Color.RED);
-        StdDraw.setPenRadius(0.15);
-        DGraph g = this.graph;
-        if (g != null) {
-            Iterator iter = g.getHash().entrySet().iterator();
-            while (iter.hasNext()) {
-                Map.Entry map = (Map.Entry) iter.next();
-                int key = (int) map.getKey();
-                Point3D p = g.getNode(key).getLocation();
-                StdDraw.filledCircle(p.x(), p.y(), 0.4);
-                StdDraw.text(p.x(), p.y() + 0.5, "" + g.getNode(key).getKey());
-            }
-            StdDraw.setPenColor(Color.BLACK);
-            StdDraw.setPenRadius(0.01);
-            Iterator it2 = g.getEdgeHash().entrySet().iterator();
-            while (it2.hasNext()) {
-                Map.Entry map2 = (Map.Entry) it2.next();
-                int keySrc = (int) map2.getKey();
-                HashMap temp = (HashMap) g.getEdgeHash().get(keySrc);
-                Iterator it3 = temp.entrySet().iterator();
-                if (temp != null) {
-                    while (it3.hasNext()) {
-                        Map.Entry map3 = (Map.Entry) it3.next();
-                        int keyDest = (int) map3.getKey();
-                        if (temp.get(keyDest) != null) {
-                            edge_data edge = (edge_data) temp.get(keyDest);
-                            double weight = edge.getWeight();
-                            node_data srcNode = g.getNode(keySrc);
-                            node_data dstNode = g.getNode(keyDest);
-                            Point3D srcP = srcNode.getLocation();
-                            Point3D dstP = dstNode.getLocation();
-                            StdDraw.line(srcP.x(), srcP.y(), dstP.x(), dstP.y());
-                            StdDraw.setPenColor(Color.BLACK);
-                            StdDraw.text((srcP.x() + dstP.x()) / 2, (srcP.y() + dstP.y()) / 2, "" + weight);
-
-                        }
+        if (this.g != null) {
+            Collection<node_data> Nodes = this.g.getV();
+            for (node_data node_data : Nodes) {
+                Point3D p = node_data.getLocation();
+                g.setColor(Color.ORANGE);
+                g.fillOval(p.ix(), p.iy(), 10, 10);
+                g.setColor(Color.BLACK);
+                g.drawString(Integer.toString(node_data.getKey()), p.ix() + 1, p.iy() - 2);
+                Collection<edge_data> Edge = this.g.getE(node_data.getKey());
+                for (edge_data edge_data : Edge) {
+                    if (edge_data.getTag() == 100) {
+                        edge_data.setTag(0);
+                        g.setColor(Color.RED);
+                    } else {
+                        g.setColor(Color.BLUE);
+                    }
+                    node_data dest = this.g.getNode(edge_data.getDest());
+                    Point3D p2 = dest.getLocation();
+                    if (p2 != null) {
+                        g.drawLine(p.ix(), p.iy(),
+                                p2.ix(), p2.iy());
+                        g.drawString(Double.toString(edge_data.getWeight()), (p.ix() + p2.ix()) / 2, (p.iy() + p2.iy()) / 2);
+                        g.setColor(Color.MAGENTA);
+                        int x_place = ((((((p.ix() + p2.ix()) / 2) + p2.ix()) / 2) + p2.ix()) / 2);
+                        int y_place = ((((((p.iy() + p2.iy()) / 2) + p2.iy()) / 2) + p2.iy()) / 2);
+                        g.fillOval(x_place, y_place, 5, 5);
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * this function will save a graph to file
+     */
+    private void Savegraph() {
+        Graph_Algo gg = new Graph_Algo();
+        gg.init(this.g);
+        //		 parent component of the dialog
+        JFrame parentFrame = new JFrame();
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Specify a file to save");
+        int userSelection = fileChooser.showSaveDialog(parentFrame);
+
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToSave = fileChooser.getSelectedFile();
+            String file = fileToSave.getAbsolutePath();
+            gg.save(file);
+            System.out.println("Save as file: " + fileToSave.getAbsolutePath());
+        }
+
+    }
+
+    /**
+     * this function will load a graph and paint it
+     */
+    private void Loadgraph() {
+        Graph_Algo gg = new Graph_Algo();
+        JFrame parentFrame = new JFrame();
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Specify a file to load");
+        int userSelection = fileChooser.showOpenDialog(parentFrame);
+
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToLoad = fileChooser.getSelectedFile();
+            String file = fileToLoad.getAbsolutePath();
+            gg.init(file);
+            repaint();
+            System.out.println("Load from file: " + fileToLoad.getAbsolutePath());
+        }
+    }
+
+    /**
+     * the function will operate the shortest path dist and return the distance
+     */
+    private void shortestPathDist() {
+        JFrame input = new JFrame();
+        String src = JOptionPane.showInputDialog(
+                null, "what is the key for src?");
+        String dest = JOptionPane.showInputDialog(
+                null, "what is the key for dest?");
+        try {
+            Graph_Algo gg = new Graph_Algo();
+            gg.init(this.g);
+            double ans = gg.shortestPathDist(Integer.parseInt(src), Integer.parseInt(dest));
+            String s = Double.toString(ans);
+            JOptionPane.showMessageDialog(input, "the shortest distance is: " + s);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * the function will operate the shortest path and return the shortest path to the user
+     * and paint the path in red color
+     */
+    private void shortestPath() {
+        JFrame input = new JFrame();
+        String s = "";
+        String src = JOptionPane.showInputDialog(
+                null, "what is the key for src?");
+        String dest = JOptionPane.showInputDialog(
+                null, "what is the key for dest?");
+        if (!src.equals(dest)) {
+            try {
+                Graph_Algo gg = new Graph_Algo();
+                gg.init(this.g);
+                ArrayList<node_data> shortPath = new ArrayList<node_data>();
+                shortPath = (ArrayList<node_data>) gg.shortestPath(Integer.parseInt(src), Integer.parseInt(dest));
+                for (int i = 0; i + 1 < shortPath.size(); i++) {
+                    this.g.getEdge(shortPath.get(i).getKey(), shortPath.get(i + 1).getKey()).setTag(100);
+                    s += shortPath.get(i).getKey() + "--> ";
+                }
+                s += shortPath.get(shortPath.size() - 1).getKey();
+                repaint();
+                JOptionPane.showMessageDialog(input, "the shortest path is: " + s);
+
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(input, "the shortest path is: null");
+            }
+        }
+    }
+
+    /**
+     * the function will operate the tsp function, return the user the shortest path and paint
+     * the path in red color
+     */
+
+//    private void TSP() {
+//        JFrame input = new JFrame();
+//        Graph_Algo gr = new Graph_Algo();
+//        gr.init(this.g);
+//        ArrayList<Integer> targets = new ArrayList<Integer>();
+//        String src = "";
+//        String s = "";
+//        do {
+//            src = JOptionPane.showInputDialog(
+//                    null, "get a key if you want to Exit get in Exit");
+//            if ((!src.equals("Exit"))) {
+//                targets.add(Integer.parseInt(src));
+//            }
+//        } while (!src.equals("Exit"));
+//        ArrayList<node_data> shortPath = new ArrayList<node_data>();
+//        shortPath = (ArrayList<node_data>) gr.TSP(targets);
+//        if (shortPath != null) {
+//            for (int i = 0; i + 1 < shortPath.size(); i++) {
+//                this.g.getEdge(shortPath.get(i).getKey(), shortPath.get(i + 1).getKey()).setTag(100);
+//                s += shortPath.get(i).getKey() + "--> ";
+//            }
+//            s += shortPath.get(shortPath.size() - 1).getKey();
+//            repaint();
+//            JOptionPane.showMessageDialog(input, "the shortest path is: " + s);
+//        }
+//        if (shortPath == null) {
+//            JOptionPane.showMessageDialog(input, "the shortest path is: null ");
+//        }
+//    }
+
+    private void isConnected() {
+        JFrame input = new JFrame();
+        Graph_Algo gr = new Graph_Algo();
+        gr.init(this.g);
+        boolean ans = gr.isConnected();
+        if (ans == true) {
+            JOptionPane.showMessageDialog(input, "this graph is connected");
+        } else {
+            JOptionPane.showMessageDialog(input, "the graph is not connected");
+        }
+
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String str = e.getActionCommand();
+
+        switch (str) {
+            case "Draw graph":
+                repaint();
+                break;
+            case "Save graph":
+                Savegraph();
+                break;
+            case "Load graph":
+                Loadgraph();
+                break;
+            case "is Connected":
+                isConnected();
+                break;
+            case "shortest Path Dist":
+                shortestPathDist();
+                break;
+            case "shortest Path":
+                shortestPath();
+                break;
+//            case "TSP":
+//                TSP();
+//                break;
+            default:
+                break;
+
         }
     }
 }
