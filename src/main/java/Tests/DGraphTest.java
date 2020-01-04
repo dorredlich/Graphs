@@ -101,10 +101,9 @@ public class DGraphTest {
         d.addNode(nd3);
         d.removeNode(1);
         d.removeNode(2);
-        d.removeNode(3);
         assertEquals(null,d.getNode(1));
         assertEquals(null,d.getNode(2));
-        assertEquals(null,d.getNode(3));
+
     }
 
     @Test

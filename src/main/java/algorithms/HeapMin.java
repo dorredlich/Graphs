@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public class HeapMin {
 
     private ArrayList<node_data> array;
+    private int arraySize;
 
     public ArrayList<node_data> getArray(){
         return array;
@@ -24,13 +25,10 @@ public class HeapMin {
     }
 
     public void insert(node_data node) {
-
         array.add(node);
         int i = array.size() - 1;
         int parent = parent(i);
-
         while (parent != i && array.get(i).getWeight() < array.get(parent).getWeight()) {
-
             swap(i, parent);
             i = parent;
             parent = parent(i);
@@ -39,30 +37,23 @@ public class HeapMin {
 
     // Build Min Heap
     public void build() {
-
         for (int i = (array.size() / 2) - 1; i >= 0; i--) {
             minHeapify(i);
         }
     }
 
-    // Min Heapify
-    // Additional conditions to keep track of heap_index
     private void minHeapify(int i) {
         int l = left(i);
         int r = right(i);
         int smallest = -1;
-        if (l <= array.size()-1) {
-            if (getDist(array.get(l)) < getDist(array.get(i))) {
+            if (l <= array.size()-1 && array.get(l).getWeight() < array.get(i).getWeight()) {
                 smallest = l;
             } else {
                 smallest = i;
             }
-        }
-        if (r <= array.size()-1) {
-            if (getDist(array.get(r)) < getDist(array.get(smallest))) {
+            if (r <= array.size()-1 && array.get(r).getWeight() < array.get(smallest).getWeight()) {
                 smallest = r;
             }
-        }
         if (smallest != i) {
             swap(i,smallest);
             minHeapify(smallest);
@@ -71,7 +62,7 @@ public class HeapMin {
 
 
     /**
-    * Removing min node of the array and using minheapify to find the place of the node
+    * Returns the min node of the heap
      */
     public node_data extractMin() {
         if (array.size() == 0) {
@@ -80,59 +71,32 @@ public class HeapMin {
         if(array.size() == 1){
             node_data min = array.get(0);
         }
-        //setting the last node to be the root
         node_data min = array.get(0);
-        node_data last = array.remove(array.size() - 1);
-        array.set(0, last);
+        array.set(0, array.get(array.size() - 1));
+        array.remove(array.size() - 1);
         minHeapify(0);
-
         return min;
     }
-//
-//    // Decrease Priority/Key
-//    public void decreaseKey(node_data i, double key) {
-//        if (sortedQ.get(i).getWeight() < key) {
-//            return;
-//        }
-//        sortedQ.get(i).getKey() = key;
-//        while (i > 0 && sortedQ.get(parent(i)).getWeight() > sortedQ.get(i).getWeight()) {
-//            // Change heap_index
-//            sortedQ.get(parent(i)).heap_index = i;
-//            sortedQ.get(i).heap_index = parent(i);
-//
-//            node_data temp = sortedQ.get(i);
-//            sortedQ.set(i, sortedQ.get(parent(i)));
-//            sortedQ.set(parent(i), temp);
-//            i = parent(i);
-//        }
-//    }
 
-    // Get the Parent of a node
     private int parent(int i) {
         return (i - 1) / 2;
     }
 
-    // Get the left child of the node
     private int left(int i) {
         return 2 * i + 1;
     }
 
-    // Get the right child of the node
     private int right(int i) {
         return 2 * i + 2;
     }
 
-    // Check the heap is empty
+
     public boolean isEmpty() {
-        return array.isEmpty();
+        return array.size() == 0;
     }
 
+    public node_data getMin() { return array.get(0); }
 
-    // Change this method to change the value based on which the queue should be
-    // sorted
-    private double getDist(node_data v) {
-        return v.getWeight();
-    }
 
     //swap between nodes
     private void swap(int i, int parent) {
@@ -140,5 +104,4 @@ public class HeapMin {
         array.set(parent, array.get(i));
         array.set(i, temp);
     }
-
 }
