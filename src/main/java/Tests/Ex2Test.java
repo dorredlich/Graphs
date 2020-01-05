@@ -36,14 +36,15 @@ public class Ex2Test {
     void setUp() throws Exception {
     }
 
-//    @Test
-//    void testConnectivity() {
-//        _alg = new Graph_Algo(_graph);
-//        boolean con = _alg.isConnected();
-//        if(!con) {
-//            fail("shoulbe be connected");
-//        }
-//    }
+    @Test
+    void testConnectivity() {
+        _alg = new Graph_Algo();
+        _alg.init(_graph);
+        boolean con = _alg.isConnected();
+        if(!con) {
+            fail("shoulbe be connected");
+        }
+    }
     @Test
     void testgraph() {
         boolean ans = drawGraph(_graph);
@@ -55,7 +56,7 @@ public class Ex2Test {
         return ans;
     }
     boolean drawGraph(graph g) {
-        // YOUR GUI graph draw
+        Graph_GUI gui = new Graph_GUI(g);
         return true;
 
     }
