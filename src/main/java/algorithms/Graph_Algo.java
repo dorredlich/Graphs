@@ -2,15 +2,13 @@ package algorithms;
 
 import java.io.*;
 import java.util.*;
-
-import com.sun.corba.se.impl.orbutil.graph.Graph;
 import dataStructure.*;
-import org.w3c.dom.events.EventException;
+
 
 /**
  * This empty class represents the set of graph-theory algorithms
  * which should be implemented as part of Ex2 - Do edit this class.
- * @author
+ * @author Dor Redlich
  *
  */
 public class Graph_Algo implements graph_algorithms,Serializable {
@@ -25,6 +23,10 @@ public class Graph_Algo implements graph_algorithms,Serializable {
         this.GraphAlgo = g;
     }
 
+    /**
+     * the function will to deserialize from a file
+     * @param file_name name of the file
+     */
     @Override
     public void init(String file_name) {
         try {
@@ -47,6 +49,10 @@ public class Graph_Algo implements graph_algorithms,Serializable {
 
     }
 
+    /**
+     * the function will to serialize to a file
+     * @param file_name name of the file
+     */
     @Override
     public void save(String file_name) {
         try {
@@ -64,6 +70,12 @@ public class Graph_Algo implements graph_algorithms,Serializable {
 
     }
 
+    /**
+     * the funtion will pass all over the nodes in the graph and check if is connect to neighbor.
+     * after passing all the neighbor that is connect to the node i will set the visit of the node to ture that i will not
+     * pass again.
+     * @return true if connect else false
+     */
     @Override
     public boolean isConnected() {
         NodeData n = null;
@@ -139,48 +151,26 @@ public class Graph_Algo implements graph_algorithms,Serializable {
         }
     }
 
+    /**
+     * pass all over a sub graph that will get from a list of nodes.
+     * @param targets the list of nodes to pass if their is connection
+     * @return the list of targest.
+     */
     @Override
     public List<node_data> TSP(List<Integer> targets) {
-        graph con = new DGraph();
-        if (this.isConnected() == false) {
-            graph sub = new DGraph();
-            sub = this.copy();
-            for (node_data n : this.GraphAlgo.getV()) {// remove all the nodes that not in the targets list
-                if (!targets.contains(n.getKey())) {
-                    sub.removeNode(n.getKey());
-                }
-            }
-            Graph_Algo subA = new Graph_Algo();
-            if (subA.isConnected()) {
-                con = sub;
-            } else {
-                return null;
-            }
-        } else {
-            con = this.GraphAlgo;
+        List<node_data> list = new LinkedList<>();
+        Iterator<Integer> i = targets.iterator();
+        int src = i.next();
+        list.add(0,GraphAlgo.getNode(src));
+        while(i.hasNext()) {
+            int dest = i.next();
+            List<node_data> temp = shortestPath(src,dest);
+            if (temp == null) return null;
+            temp.remove(0);//avoid duplicates
+            list.addAll(temp);
+            src = dest;
         }
-        List<node_data> ans = new LinkedList<>();
-        int index = 1;
-        for (int i = 0; i < targets.size(); i++) {
-            while (index < targets.size() && con.getNode(targets.get(index)).getInfo() == "1") {
-                index++;
-            }
-            if (index == targets.size()) {
-                break;
-            }
-            List<node_data> temp = shortestPath(targets.get(i), targets.get(index));
-            for (node_data n : temp) {
-                if (n.getKey() == targets.get(i) && i != 0) {
-                    continue;
-                }
-                ans.add(n);
-                if (targets.contains(n.getKey())) {
-                    con.getNode(n.getKey()).setInfo("1");
-                }
-            }
-
-        }
-        return ans;
+        return list;
     }
 
     /**
@@ -208,6 +198,9 @@ public class Graph_Algo implements graph_algorithms,Serializable {
         return g;
     }
 
+    /**
+     * helper function to set all the nodes weight to infinity and the tag to a zero.
+     */
        public void setNodes() {
         Collection<node_data> temp = this.GraphAlgo.getV();
         for (node_data node : temp) {
@@ -217,7 +210,7 @@ public class Graph_Algo implements graph_algorithms,Serializable {
     }
 
     /**
-     * function that set all the weight of the nodes depending of the weight the edge is and
+     * function that set all the weight of the nodes depending of the weight the edge is connect and
      * help by marking all the visited.
      * @param g the graph
      * @param src the start.

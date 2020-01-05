@@ -18,12 +18,19 @@ public class HeapMin {
         this.array = new ArrayList<node_data>();
     }
 
-    // Constructor
+    /**
+     * Constructor
+     * @param ar
+     */
     public HeapMin(ArrayList<node_data> ar) {
         this.array = ar;
         build();
     }
 
+    /**
+     * insert the nodes to a min heep
+     * @param node we want to add
+     */
     public void insert(node_data node) {
         array.add(node);
         int i = array.size() - 1;
@@ -35,13 +42,19 @@ public class HeapMin {
         }
     }
 
-    // Build Min Heap
+    /**
+     * Build Min Heap
+     */
     public void build() {
         for (int i = (array.size() / 2) - 1; i >= 0; i--) {
             minHeapify(i);
         }
     }
 
+    /**
+     * order the heap to be min heap
+     * @param i we get, if he bigger with one of the child we swap until i find is place
+     */
     private void minHeapify(int i) {
         int l = left(i);
         int r = right(i);
@@ -78,14 +91,29 @@ public class HeapMin {
         return min;
     }
 
+    /**
+     * the parent of a nodes
+     * @param i the index the we check
+     * @return the parent
+     */
     private int parent(int i) {
         return (i - 1) / 2;
     }
 
+    /**
+     *
+     * @param i
+     * @return the left child of the parent
+     */
     private int left(int i) {
         return 2 * i + 1;
     }
 
+    /**
+     *
+     * @param i
+     * @return right child of the parent
+     */
     private int right(int i) {
         return 2 * i + 2;
     }
@@ -98,7 +126,11 @@ public class HeapMin {
     public node_data getMin() { return array.get(0); }
 
 
-    //swap between nodes
+    /**
+     * helper function to swap between nodes
+     * @param i
+     * @param parent the parent that i need to fund is place.
+     */
     private void swap(int i, int parent) {
         node_data temp = array.get(parent);
         array.set(parent, array.get(i));
